@@ -1,0 +1,10 @@
+# Node.js
+node_modules/
+npm-debug.log
+
+# Muhit o'zgaruvchilari
+.env
+
+# OS generatsiya qiladigan fayllar
+.DS_Store
+Thumbs.db

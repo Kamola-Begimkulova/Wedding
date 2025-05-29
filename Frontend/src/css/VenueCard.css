@@ -1,0 +1,63 @@
+.venue-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block; 
+  }
+  .venue-card-item { 
+    background-color: #FFF8DC;
+    border: 1px solid #EBD8C3;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(139, 69, 19, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%; 
+  }
+  .venue-card-item:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 7px 20px rgba(139, 69, 19, 0.2);
+  }
+  .venue-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  .venue-card-content {
+    padding: 15px;
+    flex-grow: 1;
+  }
+  .venue-card-content h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 1.4em;
+    color: #8B4513;
+    font-family: 'Georgia', serif;
+  }
+  .venue-card-content p {
+    margin-bottom: 6px;
+    font-size: 0.9em;
+    color: #5D4037;
+  }
+  .venue-price {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #A0522D;
+    margin-top: 8px;
+  }
+  .venue-capacity {
+    display: inline-block;
+    background-color: #EBD8C3;
+    color: #8B4513;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    margin-top: 4px;
+  }
+  .venue-rating {
+      font-size: 0.9em;
+      color: #DAA520; 
+      margin-top: 5px;
+  }
+  
+  

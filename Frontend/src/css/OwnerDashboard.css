@@ -1,0 +1,235 @@
+.owner-dashboard {
+    /* .dashboard-page stillari App.css dan keladi */
+  }
+  .owner-dashboard h2, .owner-dashboard h3 {
+    color: var(--primary-color);
+    font-family: var(--font-primary);
+  }
+  .owner-dashboard h3 {
+      font-size: 1.6em;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      border-bottom: 1px dashed var(--light-accent-color);
+      padding-bottom: 8px;
+  }
+  
+  .create-venue-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--primary-color) !important; /* App.css dagi .action-button dan farqli */
+  }
+  .create-venue-btn:hover {
+    background-color: var(--secondary-color) !important;
+  }
+  
+  
+  .owner-form { /* .venue-form va .admin-form ga o'xshash */
+    background-color: var(--background-color);
+    padding: 20px 25px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border: 1px solid var(--light-accent-color);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  }
+  .owner-form h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+  }
+  .owner-form .form-grid { /* AdminDashboard.css dagi kabi */
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+  }
+  .owner-form .form-group.full-width {
+      grid-column: 1 / -1;
+  }
+  .owner-form .form-actions { /* AdminDashboard.css dagi kabi */
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      margin-top: 20px;
+  }
+  .owner-form .submit-button, .owner-form .cancel-button { /* AdminDashboard.css dagi kabi */
+      /* Stillar o'xshash */
+  }
+  
+  .venues-list-owner {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 25px;
+  }
+  .owner-venue-card {
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 0; /* Rasm uchun paddingni olib tashlash */
+    box-shadow: 0 4px 12px rgba(139, 69, 19, 0.1);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s ease;
+  }
+  .owner-venue-card:hover {
+      box-shadow: 0 6px 18px rgba(139, 69, 19, 0.18);
+  }
+  
+  .venue-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--light-accent-color);
+  }
+  .venue-card-header h4 {
+    margin: 0;
+    color: var(--secondary-color);
+    font-family: var(--font-primary);
+    font-size: 1.3em;
+  }
+  .owner-venue-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      /* border-top-left-radius: 10px; */
+      /* border-top-right-radius: 10px; */ /* Agar padding:0 bo'lsa kerak emas */
+  }
+  .venue-card-body {
+      padding: 15px 20px;
+      flex-grow: 1;
+  }
+  .venue-card-body p {
+    margin-bottom: 7px;
+    font-size: 0.9em;
+    color: var(--text-color);
+  }
+  .venue-card-body p strong {
+      color: var(--secondary-color);
+  }
+  
+  .owner-actions {
+      padding: 10px 20px 15px;
+      border-top: 1px solid var(--light-accent-color);
+      display: flex;
+      justify-content: space-around; /* Yoki flex-start, gap bilan */
+      gap: 10px;
+      flex-wrap: wrap;
+  }
+  .owner-actions .action-link {
+      /* App.css dagi .action-link stillari */
+      padding: 8px 12px;
+      font-size: 0.85em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+  }
+  .owner-actions .action-link i {
+      font-size: 0.9em;
+  }
+  .edit-link { border-color: #2980b9; color: #2980b9; }
+  .edit-link:hover { background-color: #2980b9; color: white; }
+  .images-link { border-color: #8e44ad; color: #8e44ad; }
+  .images-link:hover { background-color: #8e44ad; color: white; }
+  .bookings-link { border-color: #27ae60; color: #27ae60; }
+  .bookings-link:hover { background-color: #27ae60; color: white; }
+  .view-link { border-color: #7f8c8d; color: #7f8c8d; }
+  .view-link:hover { background-color: #7f8c8d; color: white;}
+  
+  
+  /* Images Modal */
+  .images-modal .venue-gallery { /* VenueDetailPage.css dagi .venue-gallery ga o'xshash */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    max-height: 300px; /* Scroll paydo bo'lishi uchun */
+    overflow-y: auto;
+    padding: 5px;
+    background-color: var(--background-color);
+    border: 1px solid var(--light-accent-color);
+    border-radius: 6px;
+  }
+  .images-modal .gallery-item {
+      position: relative;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      overflow: hidden;
+  }
+  .images-modal .gallery-item img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    display: block;
+  }
+  .images-modal .gallery-item-actions {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: space-around;
+      padding: 5px 0;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+  }
+  .images-modal .gallery-item:hover .gallery-item-actions {
+      opacity: 1;
+  }
+  .images-modal .gallery-item-actions button {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1.1em;
+  }
+  .images-modal .gallery-item-actions button:hover {
+      color: var(--accent-color);
+  }
+  .images-modal .main-image-badge {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background-color: var(--accent-color);
+      color: var(--secondary-color);
+      padding: 2px 6px;
+      font-size: 0.7em;
+      border-radius: 3px;
+      font-weight: bold;
+  }
+  .image-upload-form {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 15px;
+  }
+  .image-upload-form input[type="file"] {
+      flex-grow: 1;
+      border: 1px solid var(--light-accent-color);
+      padding: 8px;
+      border-radius: 5px;
+      font-size: 0.9em;
+  }
+  .upload-image-btn {
+      /* .button-primary stillarini ishlatish mumkin */
+      background-color: var(--primary-color);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 5px;
+      font-size: 0.9em;
+  }
+  .upload-image-btn:disabled {
+      background-color: #ccc;
+  }
+  
+  /* Bookings Modal */
+  .bookings-modal .booking-table-owner { /* .admin-table ga o'xshash */
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85em; /* Modal ichida kichikroq */
+  }
+  .bookings-modal .booking-table-owner th, .bookings-modal .booking-table-owner td {
+      padding: 8px 10px;
+      /* Qolgan stillar .admin-table dan keladi */
+  }

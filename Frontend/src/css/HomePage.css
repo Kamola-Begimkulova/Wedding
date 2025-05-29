@@ -1,0 +1,222 @@
+.homepage-container {
+    /* Umumiy stillar App.css dan keladi */
+    padding-bottom: 30px; /* Footer uchun joy */
+  }
+  
+  .hero-section {
+    /* Avvalgi stillar qoladi, faqat search-bar-container o'rniga main-search-bar */
+    background: linear-gradient(rgba(44, 62, 80, 0.7), rgba(44, 62, 80, 0.7)), url('https://images.unsplash.com/photo-1519750783826-e2420f4d687f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'); /* Yangi, sifatliroq fon rasmi */
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 70px 25px; /* Padding kattalashtirildi */
+    text-align: center;
+    border-radius: 12px; /* Yumaloqroq */
+    margin-bottom: 35px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  }
+  
+  .hero-section h1 {
+    font-size: 3.2em; /* Kattaroq */
+    margin-bottom: 18px;
+    font-family: var(--font-primary);
+    color: var(--accent-color); /* Oltinrang */
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.6);
+  }
+  
+  .hero-section p {
+    font-size: 1.35em; /* Kattaroq */
+    margin-bottom: 30px;
+    color: var(--light-text-color);
+    opacity: 0.95;
+  }
+  
+  .main-search-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* Elementlar orasida joy */
+    flex-wrap: wrap; /* Kichik ekranlarda sig'ishi uchun */
+  }
+  
+  .search-input-main {
+    padding: 14px 22px; /* Kattaroq input */
+    font-size: 1.15em;
+    border-radius: 30px; /* To'liq yumaloq */
+    border: 2px solid var(--accent-color);
+    width: 65%;
+    max-width: 550px;
+    background-color: rgba(255,255,255,0.95);
+    color: var(--text-color);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+  }
+  .search-input-main::placeholder { color: #888; }
+  .search-input-main:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.4), 0 4px 12px rgba(0,0,0,0.15);
+  }
+  
+  .filter-toggle-button {
+    background-color: var(--accent-color);
+    color: var(--secondary-color);
+    border: none;
+    padding: 14px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.05em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .filter-toggle-button:hover {
+    background-color: #ffd000; /* Sal ochroq oltinrang */
+    transform: translateY(-2px);
+  }
+  .filter-toggle-button i {
+      font-size: 0.95em;
+  }
+  
+  /* Filterlar Paneli */
+  .filters-panel-homepage {
+    background-color: var(--card-bg-color);
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Adaptiv filterlar */
+    gap: 20px;
+    border: 1px solid var(--light-accent-color);
+  }
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+  }
+  .filter-group label {
+    font-size: 0.9em;
+    color: var(--secondary-color);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .filter-group input[type="number"],
+  .filter-group select {
+    /* App.css dagi .form-group input stillarini ishlatadi */
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--light-accent-color);
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 0.95em;
+    background-color: #fff;
+  }
+  .price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .price-inputs input { width: calc(50% - 4px); } /* Oraliq uchun joy */
+  .price-inputs span { color: var(--secondary-color); }
+  
+  .filter-actions {
+    grid-column: 1 / -1; /* To'liq kenglikni egallashi uchun */
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 15px;
+  }
+  .apply-filters-button, .reset-filters-button {
+    /* .button-primary va .button-secondary stillarini ishlatish mumkin */
+    padding: 10px 22px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .apply-filters-button {
+    background-color: var(--primary-color);
+    color: var(--light-text-color);
+    border: none;
+  }
+  .apply-filters-button:hover { background-color: var(--secondary-color); transform: translateY(-1px); }
+  
+  .reset-filters-button {
+    background-color: #7f8c8d; /* Kulrang */
+    color: white;
+    border: none;
+  }
+  .reset-filters-button:hover { background-color: #6c7a7d; transform: translateY(-1px); }
+  
+  
+  .venues-section-title {
+    text-align: center;
+    font-family: var(--font-primary);
+    color: var(--secondary-color);
+    font-size: 2.2em;
+    margin-top: 40px;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--light-accent-color);
+    position: relative; /* Dekorativ element uchun */
+  }
+  /* Dekorativ element */
+  .venues-section-title::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 3px;
+      background-color: var(--accent-color);
+      margin: 10px auto 0;
+  }
+  
+  
+  .venues-grid-homepage {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Kattaroq kartochkalar */
+    gap: 30px;
+  }
+  
+  .no-venues-message {
+      text-align: center;
+      font-size: 1.2em;
+      color: #777;
+      padding: 40px 20px;
+      background-color: var(--card-bg-color);
+      border-radius: 8px;
+      border: 1px dashed var(--light-accent-color);
+  }
+  
+  .loading-animation-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 50px 20px;
+      color: var(--primary-color);
+      font-size: 1.1em;
+  }
+  .loader-homepage {
+    border: 5px solid var(--light-accent-color); /* Ochroq */
+    border-top: 5px solid var(--primary-color); /* Asosiy rang */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .homepage-error { /* Xatolik uchun alohida stil */
+      background-color: #ffebee;
+      color: var(--error-color);
+      border: 1px solid var(--error-color);
+  }

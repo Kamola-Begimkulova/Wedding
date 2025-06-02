@@ -21,7 +21,7 @@ const VenueOwnerDashboardPage = () => {
                 <h2 className="text-xl font-semibold mb-2">Mening To'yxonalarim</h2>
                 <p>Mavjud to'yxonalaringizni ko'rish va tahrirlash.</p>
                 </Link>
-                {/* /owner/bookings/:venueId kabi linklar bo'lishi mumkin */}
+
             </div>
         </div>
     </div>

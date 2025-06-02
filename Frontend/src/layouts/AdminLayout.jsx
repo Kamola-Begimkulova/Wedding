@@ -2,12 +2,14 @@ import React from 'react';
 import Navbar from '../components/common/Navbar'; // Yoki maxsus AdminNavbar
 import { Outlet, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { Navigate } from 'react-router-dom'; 
 
 const AdminLayout = () => {
   const { user } = useAuth();
 
+  console.log("AdminLayout user:", user);
   if (user?.role_name !== 'Admin') {
-    return <Navigate to="/unauthorized" />;
+    return <Navigate to="/" />;
   }
 
   return (

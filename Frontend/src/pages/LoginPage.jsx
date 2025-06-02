@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { login, loading } = useAuth();
-  const navigate = useNavigate();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     await login(username, password);
-    // AuthContextdagi login funksiyasi avtomatik ravishda kerakli sahifaga yo'naltiradi
+    console.log('Login attempt with:', { username, password });
   };
 
   return (

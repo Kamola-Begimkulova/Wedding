@@ -1,17 +1,18 @@
 const jwt = require('jsonwebtoken');
 const db = require('../config/db'); // DB ulanishini import qilish
 
+const JWT_SECRET = 'your_jwt_secret_key'; 
 // Foydalanuvchini himoyalash (token mavjudligini va yaroqliligini tekshirish)
 const protect = async (req, res, next) => {
     let token;
 
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
-            // Tokenni headerdan olish ('Bearer TOKEN_QIYMATI')
+ 
             token = req.headers.authorization.split(' ')[1];
 
             // Tokenni tekshirish
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const decoded = jwt.verify(token, JWT_SECRET);
 
             // Foydalanuvchini ma'lumotlar bazasidan olish (parolsiz)
             // Rol nomini ham olish uchun JOIN qilamiz

@@ -87,7 +87,7 @@ const AdminUsersPage = () => {
   // Rollarni backenddan /api/roles orqali olish mumkin yoki statik
   const roles = [
     { id: 'Klient', name: 'Klient' }, 
-    { id: 'To_yxona_Egasi', name: "To'yxona Egasi" }, 
+    { id: 'Tuyxona_Egasi', name: "To'yxona Egasi" }, 
     { id: 'Admin', name: 'Admin' }
   ];
   const userStatuses = [{id: 'Aktiv', name: 'Aktiv'}, {id: 'Bloklangan', name: 'Bloklangan'}];

@@ -11,7 +11,7 @@ const {
     getVenueAvailabilityCalendar // To'yxona bandlik kalendarini olish
 } = require('../controllers/venueController');
 
-const { protect, authorize } = require('../middlewares/authMiddleware'); // Himoya middleware'lari
+const { protect, authorize } = require('../middleware/authMiddleware'); // Himoya middleware'lari
 
 // Boshqa routerlarni import qilish (ichki marshrutlar uchun)
 const venueImageRoutes = require('./venueImageRoutes'); // To'yxona suratlari uchun marshrutlar

@@ -18,7 +18,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   if (allowedRoles && user && !allowedRoles.includes(user.role_name)) {
     // Agar ruxsat etilgan rollar ko'rsatilgan bo'lsa va foydalanuvchi roli mos kelmasa
     // Foydalanuvchini ruxsat yo'q sahifasiga yoki bosh sahifaga yo'naltirish mumkin
-    return <Navigate to="/unauthorized" replace />; // Yoki boshqa sahifa
+    return <Navigate to="/" replace />; // Yoki boshqa sahifa
   }
 
   return children;

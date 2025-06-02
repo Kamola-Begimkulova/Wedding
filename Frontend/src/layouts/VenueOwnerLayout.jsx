@@ -12,7 +12,7 @@ const BookingsIcon = () => <svg className="w-5 h-5 mr-2 inline-block" fill="none
 
 
 const VenueOwnerLayout = () => {
-  const { user, loading: authLoading, isAuthenticated } = useAuth();
+  const { user, loading: authLoading} = useAuth();
   const location = useLocation();
   const [activeVenueId, setActiveVenueId] = useState(null); // Agar bitta aktiv to'yxona bo'lsa
 
@@ -20,7 +20,7 @@ const VenueOwnerLayout = () => {
     // Agar to'yxona egasining faqat bitta to'yxonasi bo'lsa yoki
     // birinchi to'yxonasini avtomatik tanlash logikasi
     const fetchOwnerVenues = async () => {
-      if (user && user.role_name === 'To_yxona_Egasi') {
+      if (user && user.role_name == 'Tuyxona_Egasi') {
         try {
           const response = await api.get('/venues/my-venues/list');
           const venues = response.data.data;
@@ -38,23 +38,24 @@ const VenueOwnerLayout = () => {
         }
       }
     };
-    if (isAuthenticated) {
+    if (user && user.role_name === 'Tuyxona_Egasi') {
         fetchOwnerVenues();
     }
-  }, [user, isAuthenticated]);
+  }, [user]);
 
 
-  if (authLoading) {
-    return <div className="flex justify-center items-center min-h-screen">Yuklanmoqda...</div>;
-  }
+if (authLoading) {
+  return <div className="flex justify-center items-center min-h-screen">Yuklanmoqda...</div>;
+}
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-  
-  if (user?.role_name !== 'To_yxona_Egasi') {
-    return <Navigate to="/unauthorized" replace />;
-  }
+if (!user) {
+  return <Navigate to="/login" replace />;
+}
+
+if (user.role_name !== 'Tuyxona_Egasi') {
+  return <Navigate to="/" replace />;
+}
+
 
   const navLinkClass = "flex items-center py-2.5 px-4 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 rounded-md transition duration-150 ease-in-out";
   const activeNavLinkClass = "flex items-center py-2.5 px-4 bg-indigo-500 text-white rounded-md shadow-md";

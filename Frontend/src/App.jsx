@@ -7,6 +7,7 @@ import api from './services/api'; // api importi VenueOwnerLayout uchun
 // Layouts
 import MainLayout from './layouts/MainLayout';
 import AdminLayout from './layouts/AdminLayout';
+import VenueOwnerLayout from './layouts/VenueOwnerLayout';
 
 // Common Pages
 import LoginPage from './pages/LoginPage';
@@ -38,107 +39,6 @@ const AddVenueIcon = () => <svg className="w-5 h-5 mr-2 inline-block" fill="none
 const BookingsIcon = () => <svg className="w-5 h-5 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>;
 
 
-// --- VenueOwnerLayout Komponenti ---
-const VenueOwnerLayout = () => {
-  const { user, loading: authLoading, isAuthenticated } = useAuth();
-  const location = useLocation();
-  const [activeVenueId, setActiveVenueId] = useState(null);
-
-  useEffect(() => {
-    const fetchOwnerVenues = async () => {
-      if (user && user.role_name === 'To_yxona_Egasi') {
-        try {
-          const response = await api.get('/venues/my-venues/list');
-          const venues = response.data.data;
-          if (venues && venues.length > 0) {
-            const firstConfirmedVenue = venues.find(v => v.venue_status === 'Tasdiqlangan');
-            if (firstConfirmedVenue) {
-              setActiveVenueId(firstConfirmedVenue.venue_id);
-            } else if (venues.length > 0) {
-              setActiveVenueId(venues[0].venue_id);
-            }
-          }
-        } catch (error) {
-          console.error("To'yxona egasining to'yxonalarini yuklashda xatolik:", error);
-        }
-      }
-    };
-    if (isAuthenticated) {
-        fetchOwnerVenues();
-    }
-  }, [user, isAuthenticated]);
-
-  if (authLoading) {
-    return <div className="flex justify-center items-center min-h-screen">Yuklanmoqda...</div>;
-  }
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-  
-  if (user?.role_name !== 'To_yxona_Egasi') {
-    return <Navigate to="/unauthorized" replace />;
-  }
-
-  const navLinkClass = "flex items-center py-2.5 px-4 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 rounded-md transition duration-150 ease-in-out";
-  const activeNavLinkClass = "flex items-center py-2.5 px-4 bg-indigo-600 text-white rounded-md shadow-lg font-medium";
-
-
-  return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
-      <Navbar />
-      <div className="flex-grow container mx-auto px-4 py-6 md:py-8 flex flex-col md:flex-row gap-6">
-        <aside className="w-full md:w-64 lg:w-72 flex-shrink-0">
-          <nav className="bg-white shadow-xl rounded-lg p-5 sticky top-24">
-            <h3 className="text-xl font-semibold text-indigo-700 mb-5 border-b border-gray-200 pb-3">
-              To'yxona Boshqaruvi
-            </h3>
-            <ul className="space-y-2">
-              <li>
-                <NavLink to="/owner/dashboard" className={({ isActive }) => isActive ? activeNavLinkClass : navLinkClass}>
-                  <DashboardIcon />
-                  Boshqaruv Paneli
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/owner/my-venues" className={({ isActive }) => isActive ? activeNavLinkClass : navLinkClass}>
-                  <VenuesIcon />
-                  Mening To'yxonalarim
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/owner/register-venue" className={({ isActive }) => isActive ? activeNavLinkClass : navLinkClass}>
-                  <AddVenueIcon />
-                  Yangi To'yxona Qo'shish
-                </NavLink>
-              </li>
-              {activeVenueId && (
-                <li>
-                  <NavLink 
-                    to={`/owner/venue-bookings/${activeVenueId}`} 
-                    className={({ isActive }) => 
-                        location.pathname.startsWith(`/owner/venue-bookings/`) ? activeNavLinkClass : navLinkClass
-                        // Yoki aniq ID bilan tekshirish: location.pathname === `/owner/venue-bookings/${activeVenueId}`
-                    }
-                  >
-                    <BookingsIcon />
-                    Joriy To'yxona Bronlari
-                  </NavLink>
-                </li>
-              )}
-            </ul>
-          </nav>
-        </aside>
-        <main className="w-full bg-white shadow-xl rounded-lg p-6 md:p-8 overflow-y-auto">
-          <Outlet />
-        </main>
-      </div>
-      <footer className="bg-gray-800 text-white text-center p-4 mt-auto">
-        &copy; {new Date().getFullYear()} To'yxonaBron - To'yxona Egasi Paneli
-      </footer>
-    </div>
-  );
-};
 
 
 function App() {
@@ -183,7 +83,7 @@ function App() {
           <Route 
             path="/owner"
             element={
-              <ProtectedRoute allowedRoles={['To_yxona_Egasi']}>
+              <ProtectedRoute allowedRoles={['Tuyxona_Egasi']}>
                 <VenueOwnerLayout /> {/* Batafsil VenueOwnerLayout shu yerda ishlatiladi */}
               </ProtectedRoute>
             }

@@ -2,7 +2,7 @@ const { Pool } = require('pg');
 require('dotenv').config({ path: '../.env' }); 
 
 const pool = new Pool({
-    connectionString: "postgresql://kamola:OcfXypODkOLqNnYnCBwPhaH1jVVoPoU0@dpg-d0rek4ndiees73bv74dg-a.oregon-postgres.render.com/photoapp_7h6h",
+    connectionString: "postgresql://image_web:uUttgnhNQFa3lZ0IOVYrRx7EFrf2rpUP@dpg-d0tcrqc9c44c739blhfg-a.oregon-postgres.render.com/Wedding",
     ssl: {
       rejectUnauthorized: false, 
     },

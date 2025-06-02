@@ -1,65 +1,69 @@
-import React, { useState, useContext } from 'react'; // React ni import qilish
-import axios from 'axios';
+import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../App';
-// import './AuthPage.css'; // App.jsx da import qilingan
 
 const LoginPage = () => {
-  const { setUser, API_BASE_URL } = useContext(AuthContext);
-  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { login, loading } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setLoading(true);
-    try {
-      const response = await axios.post(`${API_BASE_URL}/auth/login`, { username, password });
-      if (response.data && response.data.success) {
-        setUser({
-          token: response.data.token,
-          role: response.data.user.role_name,
-          fio: response.data.user.fio,
-          username: response.data.user.username,
-          userId: response.data.user.user_id
-        });
-        if (response.data.user.role_name === 'Admin') navigate('/dashboard/admin');
-        else if (response.data.user.role_name === 'To_yxona_Egasi') navigate('/dashboard/owner');
-        else navigate('/');
-      } else {
-        setError(response.data.message || "Login qilishda noma'lum xatolik.");
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || "Server bilan bog'lanishda xatolik.");
-    } finally {
-      setLoading(false);
-    }
+    await login(username, password);
+    // AuthContextdagi login funksiyasi avtomatik ravishda kerakli sahifaga yo'naltiradi
   };
 
   return (
-    <div className="auth-page">
-      <form onSubmit={handleSubmit} className="auth-form">
-        <h2>Tizimga Kirish</h2>
-        {error && <p className="error-text">{error}</p>}
-        <div className="form-group">
-          <label htmlFor="username">Login (username):</label>
-          <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Parol:</label>
-          <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        </div>
-        <button type="submit" className="auth-button" disabled={loading}>
-          {loading ? 'Kirilmoqda...' : 'Kirish'}
-        </button>
-        <p className="auth-switch">
-          Hisobingiz yo'qmi? <Link to="/register">Ro'yxatdan o'tish</Link>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">Tizimga kirish</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="username">
+              Username
+            </label>
+            <input
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              placeholder="Username kiriting"
+            />
+          </div>
+          <div className="mb-6">
+            <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="password">
+              Parol
+            </label>
+            <input
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="Parolni kiriting"
+            />
+          </div>
+          <button
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline transition duration-150"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? 'Kirilmoqda...' : 'Kirish'}
+          </button>
+        </form>
+        <p className="text-center text-gray-600 text-sm mt-6">
+          Hisobingiz yo'qmi?{' '}
+          <Link to="/register" className="text-blue-600 hover:underline">
+            Ro'yxatdan o'tish
+          </Link>
         </p>
-      </form>
+      </div>
     </div>
   );
 };
+
 export default LoginPage;

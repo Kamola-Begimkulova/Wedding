@@ -1,171 +1,109 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
-import axios from 'axios';
-import { AuthContext } from '../App';
-import VenueCard from '../components/VenueCard';
-// import './HomePage.css'; // CSS App.jsx da import qilingan
+import React, { useState, useEffect, useCallback } from 'react';
+import api from '../services/api';
+import { Link } from 'react-router-dom';
+
+// Filter komponentini AdminVenuesPage dagi bilan umumlashtirish mumkin
+// import VenueFilterSortPublic from '../components/public/VenueFilterSortPublic';
 
 const HomePage = () => {
-  const { API_BASE_URL } = useContext(AuthContext);
   const [venues, setVenues] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  
-  // Filter state'lari
-  const [searchTerm, setSearchTerm] = useState('');
-  const [districts, setDistricts] = useState([]);
-  const [selectedDistrict, setSelectedDistrict] = useState('');
-  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
-  const [capacityMin, setCapacityMin] = useState('');
-  const [sortBy, setSortBy] = useState('v.name'); // Sukut bo'yicha saralash
-  const [order, setOrder] = useState('ASC');     // Sukut bo'yicha tartib
+  const [filters, setFilters] = useState({ // Foydalanuvchi filterlari [cite: 521]
+    search: '',
+    district_id: '',
+    capacity_min: '',
+    price_max: '',
+    sort_by: 'v.name', // Default sort
+    order: 'ASC'
+  });
 
-  const [showFilters, setShowFilters] = useState(false); // Filterlarni ko'rsatish/yashirish
+  // Tumanlar va boshqa filterlar uchun ma'lumotlarni backenddan olish kerak
+  const districts = [{id: 1, name: 'Mirzo Ulugbek'}, /* ... */]; // Placeholder
 
-  // Tumanlarni yuklash
-  useEffect(() => {
-    const fetchDistricts = async () => {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/static/districts`);
-        if (response.data.success) {
-          setDistricts(response.data.data);
-        } else {
-          console.error("Tumanlarni yuklashda xatolik:", response.data.message);
-        }
-      } catch (err) {
-        console.error("Tumanlar API xatoligi:", err);
-      }
-    };
-    fetchDistricts();
-  }, [API_BASE_URL]);
-
-  // To'yxonalarni filterlar bilan yuklash
   const fetchVenues = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams();
-      if (searchTerm) params.append('search', searchTerm);
-      if (selectedDistrict) params.append('district_id', selectedDistrict);
-      if (priceRange.min) params.append('price_min', priceRange.min);
-      if (priceRange.max) params.append('price_max', priceRange.max);
-      if (capacityMin) params.append('capacity_min', capacityMin);
-      if (sortBy) params.append('sort_by', sortBy);
-      if (order) params.append('order', order);
-
-      const response = await axios.get(`${API_BASE_URL}/venues?${params.toString()}`);
-      if (response.data && response.data.success) {
-        setVenues(response.data.data);
-      } else {
-        setError(response.data.message || "To'yxonalarni yuklashda xatolik yuz berdi.");
-        setVenues([]); // Xatolik bo'lsa, bo'sh ro'yxat
-      }
+      // Backend GET /api/venues endpoint'i filterlarni qabul qilishi kerak [cite: 43]
+      const response = await api.get('/venues', { params: filters });
+      setVenues(response.data.data || []);
     } catch (err) {
-      console.error("To'yxonalarni olishda xatolik!", err);
-      setError("Server bilan bog'lanishda xatolik yuz berdi.");
-      setVenues([]); // Xatolik bo'lsa, bo'sh ro'yxat
+      setError(err.response?.data?.message || err.message || "To'yxonalarni yuklashda xatolik");
     } finally {
       setLoading(false);
     }
-  }, [API_BASE_URL, searchTerm, selectedDistrict, priceRange, capacityMin, sortBy, order]);
+  }, [filters]);
 
   useEffect(() => {
     fetchVenues();
-  }, [fetchVenues]); // Filterlar o'zgarganda avtomatik chaqirish uchun fetchVenues ni dependency ga qo'shdik
+  }, [fetchVenues]);
 
-  const handlePriceChange = (e) => {
-    setPriceRange({ ...priceRange, [e.target.name]: e.target.value });
-  };
-
-  const applyFilters = () => {
-      fetchVenues(); // fetchVenues filter o'zgarishlariga bog'liq, shuning uchun alohida chaqirish shart emas, lekin aniqlik uchun
-  };
-  
-  const resetFilters = () => {
-    setSearchTerm('');
-    setSelectedDistrict('');
-    setPriceRange({ min: '', max: '' });
-    setCapacityMin('');
-    setSortBy('v.name');
-    setOrder('ASC');
-    // fetchVenues(); // Bu useEffect da avtomatik chaqiriladi, chunki state'lar o'zgardi
+  const handleFilterChange = (newFilters) => {
+    setFilters(prev => ({ ...prev, ...newFilters }));
   };
 
   return (
-    <div className="homepage-container">
-      <div className="hero-section">
-        <h1>Eng Yaxshi To'yxonani Biz Bilan Toping!</h1>
-        <p>Orzuingizdagi to'y uchun mukammal makonni osonlik bilan bron qiling.</p>
-        <div className="main-search-bar">
-          <input
-            type="text"
-            placeholder="To'yxona nomi yoki manzilini qidiring..."
-            className="search-input-main"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button onClick={() => setShowFilters(!showFilters)} className="filter-toggle-button">
-            <i className={`fas ${showFilters ? 'fa-times' : 'fa-filter'}`}></i> 
-            {showFilters ? " Filterlarni Yashirish" : " Kengaytirilgan Filter"}
-          </button>
-        </div>
-      </div>
-
-      {showFilters && (
-        <div className="filters-panel-homepage">
-          <div className="filter-group">
-            <label htmlFor="districtFilter">Tuman:</label>
-            <select id="districtFilter" value={selectedDistrict} onChange={(e) => setSelectedDistrict(e.target.value)}>
-              <option value="">Barcha Tumanlar</option>
-              {districts.map(d => <option key={d.district_id} value={d.district_id}>{d.district_name}</option>)}
-            </select>
-          </div>
-          <div className="filter-group">
-            <label>Narx Diapazoni (so'm):</label>
-            <div className="price-inputs">
-              <input type="number" name="min" placeholder="Minimal" value={priceRange.min} onChange={handlePriceChange} />
-              <span>-</span>
-              <input type="number" name="max" placeholder="Maksimal" value={priceRange.max} onChange={handlePriceChange} />
-            </div>
-          </div>
-          <div className="filter-group">
-            <label htmlFor="capacityFilter">Minimal Sig'im (kishi):</label>
-            <input type="number" id="capacityFilter" value={capacityMin} onChange={(e) => setCapacityMin(e.target.value)} placeholder="Masalan: 100" />
-          </div>
-          <div className="filter-group">
-            <label htmlFor="sortByFilter">Saralash:</label>
-            <select id="sortByFilter" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-              <option value="v.name">Nomi Bo'yicha</option>
-              <option value="v.price">Narxi Bo'yicha</option>
-              <option value="v.capacity">Sig'imi Bo'yicha</option>
-              {/* <option value="average_rating">Reytingi Bo'yicha</option> */}
-            </select>
-          </div>
-           <div className="filter-group">
-            <label htmlFor="orderFilter">Tartib:</label>
-            <select id="orderFilter" value={order} onChange={(e) => setOrder(e.target.value)}>
-              <option value="ASC">O'sish Tartibida</option>
-              <option value="DESC">Kamayish Tartibida</option>
-            </select>
-          </div>
-          <div className="filter-actions">
-            <button onClick={applyFilters} className="apply-filters-button"><i className="fas fa-check"></i> Qo'llash</button>
-            <button onClick={resetFilters} className="reset-filters-button"><i className="fas fa-undo"></i> Tozalash</button>
-          </div>
-        </div>
-      )}
-
-      <h2 className="venues-section-title">Mavjud To'yxonalar</h2>
-      {loading && <div className="loading-animation-container"><div className="loader-homepage"></div><p>Yuklanmoqda...</p></div>}
-      {error && <p className="error-text homepage-error">Xatolik: {error}</p>}
-      {!loading && !error && venues.length === 0 && <p className="no-venues-message">Hozircha qidiruvingizga mos to'yxonalar mavjud emas.</p>}
+    <div> {/* MainLayout ichida bo'lgani uchun container va p-4 kerak emas */}
+      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">Mavjud To'yxonalar</h1>
       
-      <div className="venues-grid-homepage">
-        {!loading && !error && venues.map(venue => (
-          <VenueCard key={venue.venue_id} venue={venue} />
-        ))}
+      {/* Filter va Sortlash Komponenti (VenueFilterSortPublic) */}
+      <div className="mb-6 p-4 bg-gray-50 rounded-lg shadow">
+        <h2 className="text-xl font-semibold mb-3 text-gray-700">Saralash va Filterlash</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+                <label htmlFor="search" className="block text-sm font-medium text-gray-700">Qidiruv</label>
+                <input type="text" name="search" id="search" value={filters.search}
+                       onChange={(e) => handleFilterChange({ search: e.target.value })}
+                       className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"/>
+            </div>
+            <div>
+                <label htmlFor="district_id" className="block text-sm font-medium text-gray-700">Tuman</label>
+                <select name="district_id" id="district_id" value={filters.district_id}
+                        onChange={(e) => handleFilterChange({ district_id: e.target.value })}
+                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">Barchasi</option>
+                    {districts.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+                </select>
+            </div>
+            {/* Sig'im va Narx uchun filterlar qo'shilishi mumkin */}
+        </div>
       </div>
-      {/* TODO: Paginatsiya qo'shish */}
+
+      {loading && <p className="text-center text-gray-600 py-4">Yuklanmoqda...</p>}
+      {error && <p className="text-center text-red-500 py-4">{error}</p>}
+      
+      {!loading && !error && (
+        venues.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {venues.map(venue => (
+              <div key={venue.venue_id} className="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
+                <img 
+                    src={venue.main_image_url ? `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}${venue.main_image_url}` : 'https://via.placeholder.com/400x250?text=To\'yxona'} 
+                    alt={venue.name} 
+                    className="w-full h-56 object-cover"
+                />
+                <div className="p-5">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">{venue.name}</h3>
+                  <p className="text-sm text-gray-600 mb-1"><span className="font-medium">Manzil:</span> {venue.address}, {venue.district_name}</p>
+                  <p className="text-sm text-gray-600 mb-1"><span className="font-medium">Sig'imi:</span> {venue.capacity} kishi</p>
+                  <p className="text-lg font-bold text-indigo-600 mb-3">{venue.price?.toLocaleString()} so'm / kishi</p>
+                  <Link 
+                    to={`/venues/${venue.venue_id}`}
+                    className="inline-block w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md transition duration-150"
+                  >
+                    Batafsil Ko'rish
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-500 py-10 text-xl">Hozircha to'yxonalar mavjud emas.</p>
+        )
+      )}
     </div>
   );
 };
+
 export default HomePage;

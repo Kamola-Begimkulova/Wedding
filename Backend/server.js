@@ -15,8 +15,12 @@ const reviewRoutes = require('./routes/reviewRoutes');
 
 // Express ilovasini yaratish
 const app = express();
-
+app.use(cors()); // Barcha domenlardan so'rovlarga ruxsat berish
 const path = require('path');
+// Asosiy middleware'lardan foydalanish
+app.use(express.json()); // Kiruvchi JSON formatidagi so'rovlarni tushunish uchun
+app.use(express.urlencoded({ extended: true })); // Kiruvchi URL-encoded so'rovlarni tushunish uchun
+
 
 // Static fayllar uchun (yuklangan rasmlarni ko'rsatish uchun)
 // __dirname joriy fayl (server.js) joylashgan papka
@@ -31,10 +35,6 @@ app.use('/api/admin/venues', adminVenueRoutes);
 app.use('/api/venueimage', venueImageRoutes);
 app.use('/api/reviews', reviewRoutes);
 
-// Asosiy middleware'lardan foydalanish
-app.use(cors()); // Barcha domenlardan so'rovlarga ruxsat berish
-app.use(express.json()); // Kiruvchi JSON formatidagi so'rovlarni tushunish uchun
-app.use(express.urlencoded({ extended: true })); // Kiruvchi URL-encoded so'rovlarni tushunish uchun
 
 // Test uchun oddiy route
 app.get('/api/test', (req, res) => {

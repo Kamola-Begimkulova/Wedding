@@ -2,7 +2,7 @@ const db = require('../config/db');
 const bcrypt = require('bcryptjs'); // Parol heshlash uchun
 const jwt = require('jsonwebtoken'); // JWT token yaratish uchun
 
-// --- Yordamchi funksiyalar (shu faylning o'zida) ---
+const JWT_SECRET = 'your_jwt_secret_key'; 
 // Parolni heshlash
 const hashPassword = async (password) => {
     const salt = await bcrypt.genSalt(10);
@@ -19,8 +19,8 @@ const comparePassword = async (enteredPassword, hashedPassword) => {
 const generateToken = (userId, roleId) => {
     return jwt.sign(
         { id: userId, role: roleId }, // Token tarkibiga foydalanuvchi IDsi va rolini qo'shamiz
-        process.env.JWT_SECRET,
-        { expiresIn: process.env.JWT_EXPIRES_IN }
+        JWT_SECRET,
+        { expiresIn: '1d' }
     );
 };
 

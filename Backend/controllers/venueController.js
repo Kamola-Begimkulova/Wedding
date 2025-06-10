@@ -53,29 +53,85 @@ const createVenue = async (req, res) => {
 // @desc    Barcha (tasdiqlangan) to'yxonalarni olish
 // @route   GET /api/venues
 // @access  Public (lekin admin uchun boshqacha bo'lishi mumkin)
+// controllers/venueController.js
 const getAllVenues = async (req, res) => {
-    // TODO: Filterlash va saralash logikasini qo'shish (narx, sig'im, tuman bo'yicha)
-    // Hozircha faqat tasdiqlangan to'yxonalarni qaytaramiz
-    try {
-        const statusTasdiqlangan = await db.query("SELECT status_id FROM venue_statuses WHERE status_name = 'Tasdiqlangan'");
-        if (statusTasdiqlangan.rows.length === 0) {
-             return res.status(500).json({ success: false, message: "'Tasdiqlangan' statusi topilmadi." });
-        }
-        const tasdiqlanganStatusId = statusTasdiqlangan.rows[0].status_id;
+  try {
+    const {
+      search,
+      district_id,
+      capacity_min,
+      capacity_max,
+      price_min,
+      price_max,
+      sort_by = "v.name",
+      order = "ASC"
+    } = req.query;
 
-        const query = `
-            SELECT v.venue_id, v.name, v.address, v.capacity, v.price, v.main_image_url, d.district_name
-            FROM venues v
-            JOIN districts d ON v.district_id = d.district_id
-            WHERE v.status_id = $1
-            ORDER BY v.name;
-        `;
-        const { rows } = await db.query(query, [tasdiqlanganStatusId]);
-        res.status(200).json({ success: true, count: rows.length, data: rows });
-    } catch (error) {
-        // ...
+    const statusResult = await db.query(
+      "SELECT status_id FROM venue_statuses WHERE status_name = 'Tasdiqlangan'"
+    );
+
+    if (statusResult.rows.length === 0) {
+      return res.status(500).json({ success: false, message: "'Tasdiqlangan' statusi topilmadi." });
     }
+
+    const status_id = statusResult.rows[0].status_id;
+    const values = [status_id];
+    let conditions = ["v.status_id = $1"];
+    let idx = 2;
+
+    if (search) {
+      conditions.push(`LOWER(v.name) LIKE $${idx}`);
+      values.push(`%${search.toLowerCase()}%`);
+      idx++;
+    }
+
+    if (district_id) {
+      conditions.push(`v.district_id = $${idx}`);
+      values.push(district_id);
+      idx++;
+    }
+
+    if (capacity_min) {
+      conditions.push(`v.capacity >= $${idx}`);
+      values.push(capacity_min);
+      idx++;
+    }
+
+    if (capacity_max) {
+      conditions.push(`v.capacity <= $${idx}`);
+      values.push(capacity_max);
+      idx++;
+    }
+
+    if (price_min) {
+      conditions.push(`v.price >= $${idx}`);
+      values.push(price_min);
+      idx++;
+    }
+
+    if (price_max) {
+      conditions.push(`v.price <= $${idx}`);
+      values.push(price_max);
+      idx++;
+    }
+
+    const query = `
+      SELECT v.venue_id, v.name, v.address, v.capacity, v.price, v.main_image_url, d.district_name
+      FROM venues v
+      JOIN districts d ON v.district_id = d.district_id
+      WHERE ${conditions.join(" AND ")}
+      ORDER BY ${sort_by} ${order === "DESC" ? "DESC" : "ASC"};
+    `;
+
+    const result = await db.query(query, values);
+    return res.status(200).json({ success: true, count: result.rows.length, data: result.rows });
+  } catch (error) {
+    console.error("Venue filterlashda xatolik:", error);
+    return res.status(500).json({ success: false, message: "Ichki xatolik yuz berdi." });
+  }
 };
+
 
 // @desc    Muayyan to'yxonani ID si bo'yicha olish
 // @route   GET /api/venues/:id

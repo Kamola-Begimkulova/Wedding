@@ -30,7 +30,7 @@ const AdminVenuesPage = () => {
   const [owners, setOwners] = useState([]);
 
   // Static data - yuqoriga ko'tarildi
-  const districts = [
+const districts = [
     { id: 1, name: 'Bektemir' },
     { id: 2, name: 'Chilonzor' },
     { id: 3, name: 'Mirobod' },

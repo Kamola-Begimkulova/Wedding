@@ -7,7 +7,7 @@ import { AuthContext } from '../App';
 const LoginPage = () => {
   const { setUser, API_BASE_URL } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(''); 
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
